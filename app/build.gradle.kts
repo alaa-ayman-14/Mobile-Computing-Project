@@ -39,6 +39,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.core:core-splashscreen:1.2.0")
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)

@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Locale
 import com.example.bookstore.data.session.SessionManager
+import android.database.sqlite.SQLiteConstraintException
 
 class AuthRepository(
     private val userDao: UserDao,
@@ -45,7 +46,11 @@ class AuthRepository(
         )
 
         // Save user in database
-        val insertedId = userDao.insertUser(user)
+        val insertedId = try {
+            userDao.insertUser(user)
+        } catch (e: SQLiteConstraintException) {
+            return null
+        }
 
         return user.copy(id = insertedId)
     }

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8ebb3308d38029391239e7417b774145",
+    "identityHash": "2be7e63eec767cd34232531528874562",
     "entities": [
       {
         "tableName": "users",
@@ -76,7 +76,7 @@
       },
       {
         "tableName": "books",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `author` TEXT NOT NULL, `description` TEXT NOT NULL, `price` REAL NOT NULL, `category` TEXT NOT NULL, `condition` TEXT NOT NULL, `imageUri` TEXT, `sellerId` INTEGER NOT NULL, `isSold` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, FOREIGN KEY(`sellerId`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `author` TEXT NOT NULL, `description` TEXT NOT NULL, `priceInPiastres` INTEGER NOT NULL, `category` TEXT NOT NULL, `condition` TEXT NOT NULL, `imageUri` TEXT, `sellerId` INTEGER NOT NULL, `isSold` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, FOREIGN KEY(`sellerId`) REFERENCES `users`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -103,9 +103,9 @@
             "notNull": true
           },
           {
-            "fieldPath": "price",
-            "columnName": "price",
-            "affinity": "REAL",
+            "fieldPath": "priceInPiastres",
+            "columnName": "priceInPiastres",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -262,7 +262,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8ebb3308d38029391239e7417b774145')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2be7e63eec767cd34232531528874562')"
     ]
   }
 }

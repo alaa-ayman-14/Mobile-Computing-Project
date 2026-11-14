@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.example.bookstore.data.entity.User
 
 @Entity(
     tableName = "books",
@@ -29,7 +28,7 @@ data class Book(
     val title: String,
     val author: String,
     val description: String,
-    val price: Double,
+    val priceInPiastres: Long,
     val category: String,
     val condition: String,
     val imageUri: String? = null,
