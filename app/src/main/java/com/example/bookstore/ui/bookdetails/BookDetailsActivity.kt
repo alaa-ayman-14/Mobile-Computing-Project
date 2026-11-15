@@ -15,6 +15,8 @@ import android.widget.ImageView
 import android.net.Uri
 import com.google.android.material.button.MaterialButton
 import android.content.Intent
+import com.example.bookstore.data.entity.Favorite
+import kotlinx.coroutines.flow.first
 
 class BookDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +45,57 @@ class BookDetailsActivity : AppCompatActivity() {
                 finish()
                 return@launch
             }
+
+            val btnFavorite = findViewById<MaterialButton>(R.id.btnFavorite)
+            val favoriteDao = app.database.favoriteDao()
+            val userId = app.sessionManager.userId.first()
+
+            if (userId == null) {
+                btnFavorite.isEnabled = false
+            } else {
+                var isFavorite = favoriteDao.isFavorite(userId, book.id)
+
+                fun updateFavoriteButton() {
+                    btnFavorite.setText(
+                        if (isFavorite) R.string.remove_from_favorites
+                        else R.string.add_to_favorites
+                    )
+                }
+
+                updateFavoriteButton()
+
+                btnFavorite.setOnClickListener {
+                    btnFavorite.isEnabled = false
+
+                    lifecycleScope.launch {
+                        try {
+                            if (isFavorite) {
+                                favoriteDao.removeFavorite(userId, book.id)
+                                isFavorite = false
+                            } else {
+                                favoriteDao.addFavorite(
+                                    Favorite(
+                                        userId = userId,
+                                        bookId = book.id
+                                    )
+                                )
+                                isFavorite = true
+                            }
+
+                            updateFavoriteButton()
+                        } catch (e: Exception) {
+                            Toast.makeText(
+                                this@BookDetailsActivity,
+                                "Could not update favorites",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } finally {
+                            btnFavorite.isEnabled = true
+                        }
+                    }
+                }
+            }
+
 
             val seller = app.database.userDao().getUserById(book.sellerId)
 
