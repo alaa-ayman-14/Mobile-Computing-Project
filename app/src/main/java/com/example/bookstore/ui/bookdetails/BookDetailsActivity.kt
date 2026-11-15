@@ -52,10 +52,20 @@ class BookDetailsActivity : AppCompatActivity() {
                 tvSellerName.text = seller.fullName
             }
             val btnContactSeller = findViewById<MaterialButton>(R.id.btnContactSeller)
+            btnContactSeller.isEnabled = seller != null &&
+                    seller.phoneNumber.isNotBlank()
 
             btnContactSeller.setOnClickListener {
                 if (seller != null && seller.phoneNumber.isNotBlank()) {
                     val phone = seller.phoneNumber.filter { it.isDigit() }
+                    if (phone.length < 10) {
+                        Toast.makeText(
+                            this@BookDetailsActivity,
+                            "Invalid seller phone number",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@setOnClickListener
+                    }
                     val whatsappNumber = if (phone.startsWith("0") && phone.length == 11) {
                         "20${phone.substring(1)}"
                     } else {
@@ -65,7 +75,16 @@ class BookDetailsActivity : AppCompatActivity() {
                         Intent.ACTION_VIEW,
                         Uri.parse("https://wa.me/$whatsappNumber")                    )
 
-                    startActivity(whatsappIntent)
+
+                    try {
+                        startActivity(whatsappIntent)
+                    } catch (e: android.content.ActivityNotFoundException) {
+                        Toast.makeText(
+                            this@BookDetailsActivity,
+                            "Cannot open WhatsApp",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
 
@@ -89,8 +108,22 @@ class BookDetailsActivity : AppCompatActivity() {
             val ivBookImage = findViewById<ImageView>(R.id.ivBookImage)
 
             if (!book.imageUri.isNullOrEmpty()) {
-                ivBookImage.setImageURI(Uri.parse(book.imageUri))
+
+                try {
+                    ivBookImage.setImageURI(Uri.parse(book.imageUri))
+
+                    if (ivBookImage.drawable == null) {
+                        ivBookImage.setImageResource(R.drawable.ic_book_placeholder)
+                    }
+                } catch (e: Exception) {
+                    ivBookImage.setImageResource(R.drawable.ic_book_placeholder)
+                }
             }
+
+            else {
+                ivBookImage.setImageResource(R.drawable.ic_book_placeholder)
+            }
+
         }
 
 
