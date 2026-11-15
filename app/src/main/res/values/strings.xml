@@ -4,4 +4,6 @@
     <string name="book_image">book cover</string>
     <string name="contact_seller">Contact Seller on WhatsApp</string>
     <string name="book_author">by %1$s</string>
+    <string name="favorites_title">My Favorites</string>
+    <string name="remove_favorite">Remove</string>
 </resources>

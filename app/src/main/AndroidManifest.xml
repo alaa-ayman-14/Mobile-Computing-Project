@@ -37,6 +37,10 @@
             android:name=".ui.bookdetails.BookDetailsActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.favorites.FavoritesActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
