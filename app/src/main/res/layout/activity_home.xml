@@ -28,11 +28,11 @@
         android:textSize="16sp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnLogout"
+        android:id="@+id/btnGoToProfile"
         android:layout_width="180dp"
         android:layout_height="56dp"
         android:layout_marginTop="32dp"
-        android:text="Logout"
+        android:text="Go to Profile"
         android:textColor="@color/on_primary"
         android:textAllCaps="false"
         app:backgroundTint="@color/primary"
