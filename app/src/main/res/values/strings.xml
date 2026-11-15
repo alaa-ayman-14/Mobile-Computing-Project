@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">BookStore</string>
+    <string name="book_details_title">Book Details</string>
+    <string name="book_image">book cover</string>
+    <string name="contact_seller">Contact Seller on WhatsApp</string>
+    <string name="book_author">by %1$s</string>
+    <string name="favorites_title">My Favorites</string>
+    <string name="remove_favorite">Remove</string>
+
+    <string name="add_to_favorites">♡ Add to Favorites</string>
+    <string name="remove_from_favorites">♥ Remove from Favorites</string>
+
 </resources>
