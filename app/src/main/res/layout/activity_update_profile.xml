@@ -60,7 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="28dp"
-                android:hint="Full Name"
+                android:hint="Name"
                 app:boxBackgroundColor="@color/surface"
                 app:boxStrokeColor="@color/primary"
                 app:boxCornerRadiusTopStart="14dp"

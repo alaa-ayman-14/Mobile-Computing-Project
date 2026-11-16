@@ -35,8 +35,8 @@
     </style>
 
     <style name="ThemeOverlay.BookStore.BottomNav" parent="">
-        <item name="colorSecondaryContainer">@color/primary</item>
-        <item name="colorOnSecondaryContainer">@color/white</item>
+        <item name="colorSecondaryContainer">@color/white</item>
+        <item name="colorOnSecondaryContainer">@color/primary</item>
     </style>
 
 </resources>
