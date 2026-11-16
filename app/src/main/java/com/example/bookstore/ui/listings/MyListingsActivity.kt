@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.bookstore.R
 import com.example.bookstore.ui.SystemNavigationBarStyler
-import com.google.android.material.button.MaterialButton
+import com.example.bookstore.ui.navigation.BottomNavigationHelper
 
 class MyListingsActivity : AppCompatActivity() {
 
@@ -13,10 +13,9 @@ class MyListingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_my_listings)
         SystemNavigationBarStyler.apply(this)
 
-        val btnBackToProfile = findViewById<MaterialButton>(R.id.btnBackToProfile)
-
-        btnBackToProfile.setOnClickListener {
-            finish()
-        }
+        BottomNavigationHelper.setupBottomNavigation(
+            activity = this,
+            selectedItemId = R.id.navigation_listings
+        )
     }
 }

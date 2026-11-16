@@ -87,4 +87,40 @@ class AuthRepository(
     suspend fun logout() {
         sessionManager.clearSession()
     }
+
+    suspend fun updateProfile(
+        userId: Long,
+        fullName: String,
+        email: String,
+        phoneNumber: String,
+        newPassword: String? = null
+    ): User? {
+        val currentUser = userDao.getUserById(userId) ?: return null
+        val normalizedEmail = email.trim().lowercase(Locale.ROOT)
+
+        if ((normalizedEmail != currentUser.email) && userDao.isEmailExists(normalizedEmail)) {
+            return null
+        }
+
+        var hash = currentUser.passwordHash
+        var salt = currentUser.passwordSalt
+
+        if (!newPassword.isNullOrBlank()) {
+            salt = PasswordHasher.generateSalt()
+            hash = withContext(Dispatchers.Default) {
+                PasswordHasher.hashPassword(newPassword, salt)
+            }
+        }
+
+        val updatedUser = currentUser.copy(
+            fullName = fullName.trim(),
+            email = normalizedEmail,
+            phoneNumber = phoneNumber.trim(),
+            passwordHash = hash,
+            passwordSalt = salt
+        )
+
+        userDao.updateUser(updatedUser)
+        return updatedUser
+    }
 }

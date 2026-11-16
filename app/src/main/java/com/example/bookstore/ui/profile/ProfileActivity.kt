@@ -10,55 +10,35 @@ import com.example.bookstore.BookStoreApp
 import com.example.bookstore.R
 import com.example.bookstore.ui.SystemNavigationBarStyler
 import com.example.bookstore.ui.auth.LoginActivity
-import com.example.bookstore.ui.listings.MyListingsActivity
+import com.example.bookstore.ui.navigation.BottomNavigationHelper
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class ProfileActivity : AppCompatActivity() {
 
+    private lateinit var tvFullName: TextView
+    private lateinit var tvEmail: TextView
+    private lateinit var tvPhoneNumber: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
         SystemNavigationBarStyler.apply(this)
 
-        val app = application as BookStoreApp
+        BottomNavigationHelper.setupBottomNavigation(
+            activity = this,
+            selectedItemId = R.id.navigation_profile
+        )
 
-        val tvFullName = findViewById<TextView>(R.id.tvFullName)
-        val tvEmail = findViewById<TextView>(R.id.tvEmail)
-        val tvPhoneNumber = findViewById<TextView>(R.id.tvPhoneNumber)
+        tvFullName = findViewById(R.id.tvFullName)
+        tvEmail = findViewById(R.id.tvEmail)
+        tvPhoneNumber = findViewById(R.id.tvPhoneNumber)
         val btnUpdate = findViewById<MaterialButton>(R.id.btnUpdate)
-        val btnMyListings = findViewById<MaterialButton>(R.id.btnMyListings)
         val btnLogout = findViewById<MaterialButton>(R.id.btnLogout)
 
-        lifecycleScope.launch {
-            try {
-                val userId = app.sessionManager.userId.first()
-                if (userId != null) {
-                    val user = app.database.userDao().getUserById(userId)
-                    if (user != null) {
-                        tvFullName.text = user.fullName
-                        tvEmail.text = user.email
-                        tvPhoneNumber.text = user.phoneNumber
-                    }
-                }
-            } catch (_: Exception) {
-                Toast.makeText(
-                    this@ProfileActivity,
-                    "Failed to load profile details",
-                    Toast.LENGTH_SHORT,
-                ).show()
-            }
-        }
-
-        // Update button - currently does nothing
         btnUpdate.setOnClickListener {
-            // Intentionally empty for now
-        }
-
-        // Navigate to My Listings screen
-        btnMyListings.setOnClickListener {
-            val intent = Intent(this, MyListingsActivity::class.java)
+            val intent = Intent(this, UpdateProfileActivity::class.java)
             startActivity(intent)
         }
 
@@ -67,6 +47,7 @@ class ProfileActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 try {
+                    val app = application as BookStoreApp
                     app.authRepository.logout()
 
                     val intent = Intent(
@@ -88,6 +69,35 @@ class ProfileActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadUserProfile()
+    }
+
+    private fun loadUserProfile() {
+        val app = application as BookStoreApp
+
+        lifecycleScope.launch {
+            try {
+                val userId = app.sessionManager.userId.first()
+                if (userId != null) {
+                    val user = app.database.userDao().getUserById(userId)
+                    if (user != null) {
+                        tvFullName.text = user.fullName
+                        tvEmail.text = user.email
+                        tvPhoneNumber.text = user.phoneNumber
+                    }
+                }
+            } catch (_: Exception) {
+                Toast.makeText(
+                    this@ProfileActivity,
+                    "Failed to load profile details",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
