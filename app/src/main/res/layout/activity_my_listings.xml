@@ -28,16 +28,21 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAddBook"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:insetTop="0dp"
+            android:layout_height="40dp"
+            android:insetTop="6dp"
             android:insetBottom="0dp"
+            android:minHeight="40dp"
+            android:paddingHorizontal="10dp"
             android:text="+ Add Book"
             android:textAllCaps="false"
             android:textColor="@color/on_primary"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textStyle="bold"
             app:backgroundTint="@color/primary"
-            app:cornerRadius="12dp" />
+            app:cornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </LinearLayout>
 
