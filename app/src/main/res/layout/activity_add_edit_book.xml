@@ -22,7 +22,7 @@
             android:orientation="vertical"
             android:paddingHorizontal="24dp"
             android:paddingTop="28dp"
-            android:paddingBottom="28dp">
+            android:paddingBottom="60dp">
 
             <!-- Screen Header Title (Changes dynamically between Add New Book / Edit Book) -->
             <TextView
@@ -233,34 +233,43 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Save Book Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSaveBook"
+            <!-- Side-by-Side Cancel & Save Buttons -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="24dp"
-                android:text="Save Book"
-                android:textAllCaps="false"
-                android:textColor="@color/on_primary"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:backgroundTint="@color/primary"
-                app:cornerRadius="14dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
 
-            <!-- Cancel Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCancel"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginTop="10dp"
-                android:text="Cancel"
-                android:textAllCaps="false"
-                android:textColor="@color/primary"
-                android:textSize="15sp"
-                app:backgroundTint="@color/surface"
-                app:cornerRadius="14dp"
-                app:strokeColor="@color/border" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCancel"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="54dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="Cancel"
+                    android:textAllCaps="false"
+                    android:textColor="@color/primary"
+                    android:textSize="15sp"
+                    app:backgroundTint="@color/surface"
+                    app:cornerRadius="14dp"
+                    app:strokeColor="@color/border" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSaveBook"
+                    android:layout_width="0dp"
+                    android:layout_height="54dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:text="Save Book"
+                    android:textAllCaps="false"
+                    android:textColor="@color/on_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/primary"
+                    app:cornerRadius="14dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
