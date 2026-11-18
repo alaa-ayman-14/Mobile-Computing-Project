@@ -20,24 +20,20 @@ sealed class HomeListItem {
     data class CategoryHeader(val categoryName: String, val bookCount: Int) : HomeListItem()
     data class BookItem(val book: Book) : HomeListItem()
 }
-
 class BookAdapter(
     private var items: List<HomeListItem>,
     private val onCategoryHeaderClick: (String) -> Unit = {},
     private val onBookClick: (Long) -> Unit = {}
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
     companion object {
         const val VIEW_TYPE_HEADER = 0
         const val VIEW_TYPE_BOOK = 1
     }
-
     class HeaderViewHolder(
         val container: LinearLayout,
         val titleText: TextView,
         val actionText: TextView
     ) : RecyclerView.ViewHolder(container)
-
     class BookViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val bookImage: ImageView = itemView.findViewById(R.id.bookImage)
         val bookCategoryBadge: TextView = itemView.findViewById(R.id.bookCategoryBadge)
@@ -46,18 +42,15 @@ class BookAdapter(
         val bookCondition: TextView = itemView.findViewById(R.id.bookCondition)
         val bookPrice: TextView = itemView.findViewById(R.id.bookPrice)
     }
-
     override fun getItemViewType(position: Int): Int {
         return when (items[position]) {
             is HomeListItem.CategoryHeader -> VIEW_TYPE_HEADER
             is HomeListItem.BookItem -> VIEW_TYPE_BOOK
         }
     }
-
     fun isHeader(position: Int): Boolean {
         return position in items.indices && items[position] is HomeListItem.CategoryHeader
     }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val context = parent.context
         if (viewType == VIEW_TYPE_HEADER) {
@@ -75,14 +68,12 @@ class BookAdapter(
                     marginEnd = (6 * density).toInt()
                 }
             }
-
             val titleText = TextView(context).apply {
                 layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
                 setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
                 setTypeface(Typeface.SERIF, Typeface.BOLD)
                 setTextColor(ContextCompat.getColor(context, R.color.text_primary))
             }
-
             val actionText = TextView(context).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -91,7 +82,6 @@ class BookAdapter(
                 setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f)
                 setTextColor(ContextCompat.getColor(context, R.color.text_secondary))
             }
-
             container.addView(titleText)
             container.addView(actionText)
             return HeaderViewHolder(container, titleText, actionText)
@@ -100,7 +90,6 @@ class BookAdapter(
             return BookViewHolder(view)
         }
     }
-
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = items[position]) {
             is HomeListItem.CategoryHeader -> {
@@ -114,12 +103,10 @@ class BookAdapter(
             is HomeListItem.BookItem -> {
                 val bookHolder = holder as BookViewHolder
                 val book = item.book
-
                 bookHolder.bookCategoryBadge.text = book.category
                 bookHolder.bookTitle.text = book.title
                 bookHolder.bookAuthor.text = "by ${book.author}"
                 bookHolder.bookCondition.text = "Condition: ${book.condition}"
-
                 val priceInEgp = book.priceInPiastres / 100.0
                 bookHolder.bookPrice.text = String.format(Locale.US, "EGP %.2f", priceInEgp)
 
@@ -135,16 +122,13 @@ class BookAdapter(
                 } else {
                     bookHolder.bookImage.setImageResource(R.drawable.ic_book_placeholder)
                 }
-
                 bookHolder.itemView.setOnClickListener {
                     onBookClick(book.id)
                 }
             }
         }
     }
-
     override fun getItemCount(): Int = items.size
-
     fun updateItems(newItems: List<HomeListItem>) {
         items = newItems
         notifyDataSetChanged()

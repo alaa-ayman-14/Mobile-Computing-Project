@@ -34,7 +34,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class HomeActivity : AppCompatActivity() {
-
     private enum class SortOption(val label: String) {
         CATEGORY_SECTIONS("Category View"),
         PRICE_LOW_TO_HIGH("Price: Low to High"),
@@ -46,14 +45,12 @@ class HomeActivity : AppCompatActivity() {
         NEWEST_FIRST("Newest First"),
         OLDEST_FIRST("Oldest First")
     }
-
     private enum class PriceFilter(val label: String, val minPiastres: Long, val maxPiastres: Long) {
         ALL("All Prices", 0L, Long.MAX_VALUE),
         UNDER_200("Under EGP 200", 0L, 19999L),
         BETWEEN_200_AND_400("EGP 200 – 400", 20000L, 40000L),
         OVER_400("Over EGP 400", 40001L, Long.MAX_VALUE)
     }
-
     private lateinit var bookAdapter: BookAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var searchBar: EditText
@@ -69,37 +66,30 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var emptyStateContainer: LinearLayout
     private lateinit var emptyStateTitle: TextView
     private lateinit var emptyStateSubtitle: TextView
-
     private var dataJob: Job? = null
     private var submittedSearchQuery = ""
     private var selectedCategory = "All"
     private var selectedCondition = "All"
     private var selectedPriceFilter = PriceFilter.ALL
     private var selectedSort = SortOption.CATEGORY_SECTIONS
-
     private var availableCategories = listOf<String>()
     private var availableConditions = listOf<String>()
     private var hasAnyBooksInDb = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
         SystemNavigationBarStyler.apply(this)
         BottomNavigationHelper.setupBottomNavigation(
             activity = this,
             selectedItemId = R.id.navigation_home
         )
-
         bindViews()
         setupRecyclerView()
         setupSearchListeners()
         setupFilterAndSortListeners()
         loadWelcomeGreeting()
-
         observeBooks()
     }
-
     private fun bindViews() {
         recyclerView = findViewById(R.id.booksRecyclerView)
         searchBar = findViewById(R.id.searchBar)
@@ -116,7 +106,6 @@ class HomeActivity : AppCompatActivity() {
         emptyStateTitle = findViewById(R.id.emptyStateTitle)
         emptyStateSubtitle = findViewById(R.id.emptyStateSubtitle)
     }
-
     private fun loadWelcomeGreeting() {
         val app = application as BookStoreApp
         lifecycleScope.launch {
@@ -129,7 +118,6 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
-
     private fun setupRecyclerView() {
         bookAdapter = BookAdapter(
             items = emptyList(),
@@ -144,24 +132,20 @@ class HomeActivity : AppCompatActivity() {
                 startActivity(intent)
             }
         )
-
         val gridLayoutManager = GridLayoutManager(this, 2)
         gridLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
             override fun getSpanSize(position: Int): Int {
                 return if (bookAdapter.isHeader(position)) 2 else 1
             }
         }
-
         recyclerView.layoutManager = gridLayoutManager
         recyclerView.adapter = bookAdapter
     }
-
     private fun setupSearchListeners() {
         searchBar.setOnEditorActionListener { _, actionId, event ->
             val isEnterEvent = event != null &&
                     event.keyCode == KeyEvent.KEYCODE_ENTER &&
                     event.action == KeyEvent.ACTION_DOWN
-
             if (actionId == EditorInfo.IME_ACTION_SEARCH ||
                 actionId == EditorInfo.IME_ACTION_DONE ||
                 isEnterEvent
@@ -174,7 +158,6 @@ class HomeActivity : AppCompatActivity() {
                 false
             }
         }
-
         searchBar.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -187,7 +170,6 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         })
-
         btnClearSearch.setOnClickListener {
             searchBar.setText("")
             submittedSearchQuery = ""
@@ -195,13 +177,11 @@ class HomeActivity : AppCompatActivity() {
             observeBooks()
         }
     }
-
     private fun setupFilterAndSortListeners() {
         chipSortBy.setOnClickListener {
             val options = SortOption.entries.toTypedArray()
             val labels = options.map { it.label }.toTypedArray()
             val currentIndex = options.indexOf(selectedSort).coerceAtLeast(0)
-
             AlertDialog.Builder(this)
                 .setTitle("Sort Books By")
                 .setSingleChoiceItems(labels, currentIndex) { dialog, which ->
@@ -213,12 +193,10 @@ class HomeActivity : AppCompatActivity() {
                 }
                 .show()
         }
-
         chipConditionFilter.setOnClickListener {
             val options = listOf("All") + availableConditions
             val labels = options.map { if (it == "All") "All Conditions" else it }.toTypedArray()
             val currentIndex = options.indexOf(selectedCondition).coerceAtLeast(0)
-
             AlertDialog.Builder(this)
                 .setTitle("Filter by Condition")
                 .setSingleChoiceItems(labels, currentIndex) { dialog, which ->
@@ -230,12 +208,10 @@ class HomeActivity : AppCompatActivity() {
                 }
                 .show()
         }
-
         chipPriceFilter.setOnClickListener {
             val options = PriceFilter.entries.toTypedArray()
             val labels = options.map { it.label }.toTypedArray()
             val currentIndex = options.indexOf(selectedPriceFilter).coerceAtLeast(0)
-
             AlertDialog.Builder(this)
                 .setTitle("Filter by Price Range")
                 .setSingleChoiceItems(labels, currentIndex) { dialog, which ->
@@ -251,7 +227,6 @@ class HomeActivity : AppCompatActivity() {
                 }
                 .show()
         }
-
         chipResetFilters.setOnClickListener {
             searchBar.setText("")
             submittedSearchQuery = ""
@@ -259,7 +234,6 @@ class HomeActivity : AppCompatActivity() {
             selectedCondition = "All"
             selectedPriceFilter = PriceFilter.ALL
             selectedSort = SortOption.CATEGORY_SECTIONS
-
             chipSortBy.text = "Sort: ${selectedSort.label} ▾"
             chipConditionFilter.text = "Condition: All ▾"
             chipPriceFilter.text = "Price: All ▾"
@@ -268,35 +242,29 @@ class HomeActivity : AppCompatActivity() {
             observeBooks()
         }
     }
-
     private fun observeBooks() {
         dataJob?.cancel()
         dataJob = lifecycleScope.launch {
             val database = DatabaseProvider.getDatabase(applicationContext)
             val bookDao = database.bookDao()
-
             val allAvailableFlow = bookDao.getAvailableBooks()
             val searchedFlow = if (submittedSearchQuery.isBlank()) {
                 allAvailableFlow
             } else {
                 bookDao.searchBooks(submittedSearchQuery)
             }
-
             combine(allAvailableFlow, searchedFlow) { allBooks, searchedBooks ->
                 Pair(allBooks, searchedBooks)
             }.collect { (allBooks, searchedBooks) ->
                 hasAnyBooksInDb = allBooks.isNotEmpty()
-
                 val dbCategories = allBooks.map { it.category.trim() }
                     .filter { it.isNotEmpty() }
                     .distinct()
                     .sorted()
-
                 val dbConditions = allBooks.map { it.condition.trim() }
                     .filter { it.isNotEmpty() }
                     .distinct()
                     .sorted()
-
                 if (dbCategories != availableCategories) {
                     availableCategories = dbCategories
                     if (selectedCategory != "All" && selectedCategory !in availableCategories) {
@@ -304,28 +272,23 @@ class HomeActivity : AppCompatActivity() {
                     }
                     rebuildDynamicCategoryChips(availableCategories)
                 }
-
                 availableConditions = dbConditions
                 if (selectedCondition != "All" && selectedCondition !in availableConditions) {
                     selectedCondition = "All"
                     chipConditionFilter.text = "Condition: All ▾"
                 }
-
                 if (!hasAnyBooksInDb) {
                     categoryScroll.visibility = View.GONE
                     filterSortScroll.visibility = View.GONE
                     recyclerView.visibility = View.GONE
-
                     emptyStateContainer.visibility = View.VISIBLE
                     emptyStateTitle.text = "No books available at the moment"
                     emptyStateSubtitle.text = "Come back later"
                     bookAdapter.updateItems(emptyList())
                     return@collect
                 }
-
                 categoryScroll.visibility = View.VISIBLE
                 filterSortScroll.visibility = View.VISIBLE
-
                 val filteredBooks = searchedBooks.filter { book ->
                     val matchesCategory = selectedCategory == "All" ||
                             book.category.equals(selectedCategory, ignoreCase = true)
@@ -333,10 +296,8 @@ class HomeActivity : AppCompatActivity() {
                             book.condition.equals(selectedCondition, ignoreCase = true)
                     val matchesPrice = book.priceInPiastres in
                             selectedPriceFilter.minPiastres..selectedPriceFilter.maxPiastres
-
                     matchesCategory && matchesCondition && matchesPrice
                 }
-
                 if (filteredBooks.isEmpty()) {
                     recyclerView.visibility = View.GONE
                     emptyStateContainer.visibility = View.VISIBLE
@@ -345,21 +306,17 @@ class HomeActivity : AppCompatActivity() {
                     bookAdapter.updateItems(emptyList())
                     return@collect
                 }
-
                 emptyStateContainer.visibility = View.GONE
                 recyclerView.visibility = View.VISIBLE
-
                 val displayItems = buildDisplayList(filteredBooks)
                 bookAdapter.updateItems(displayItems)
             }
         }
     }
-
     private fun buildDisplayList(books: List<Book>): List<HomeListItem> {
         val useSectionedHomeView = submittedSearchQuery.isBlank() &&
                 selectedCategory == "All" &&
                 selectedSort == SortOption.CATEGORY_SECTIONS
-
         if (useSectionedHomeView) {
             val grouped = books.groupBy { it.category }
             val sectionedItems = mutableListOf<HomeListItem>()
@@ -371,7 +328,6 @@ class HomeActivity : AppCompatActivity() {
             }
             return sectionedItems
         }
-
         val sortedBooks = when (selectedSort) {
             SortOption.CATEGORY_SECTIONS,
             SortOption.NEWEST_FIRST -> books.sortedByDescending { it.createdAt }
@@ -383,14 +339,11 @@ class HomeActivity : AppCompatActivity() {
             SortOption.AUTHOR_A_TO_Z -> books.sortedBy { it.author.lowercase() }
             SortOption.AUTHOR_Z_TO_A -> books.sortedByDescending { it.author.lowercase() }
         }
-
         return sortedBooks.map { HomeListItem.BookItem(it) }
     }
-
     private fun rebuildDynamicCategoryChips(categories: List<String>) {
         categoryChipGroup.setOnCheckedStateChangeListener(null)
         categoryChipGroup.removeAllViews()
-
         val allOptions = listOf("All") + categories
         for (cat in allOptions) {
             val chip = Chip(this).apply {
@@ -427,7 +380,6 @@ class HomeActivity : AppCompatActivity() {
             }
             categoryChipGroup.addView(chip)
         }
-
         categoryChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
             val checkedId = checkedIds.firstOrNull() ?: return@setOnCheckedStateChangeListener
             val checkedChip = group.findViewById<Chip>(checkedId)
@@ -438,7 +390,6 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
-
     private fun selectCategoryChipByName(categoryName: String) {
         for (i in 0 until categoryChipGroup.childCount) {
             val chip = categoryChipGroup.getChildAt(i) as? Chip
@@ -449,17 +400,14 @@ class HomeActivity : AppCompatActivity() {
         }
         updateResetChipVisibility()
     }
-
     private fun updateResetChipVisibility() {
         val isAnyFilterActive = submittedSearchQuery.isNotEmpty() ||
                 selectedCategory != "All" ||
                 selectedCondition != "All" ||
                 selectedPriceFilter != PriceFilter.ALL ||
                 selectedSort != SortOption.CATEGORY_SECTIONS
-
         chipResetFilters.visibility = if (isAnyFilterActive) View.VISIBLE else View.GONE
     }
-
     private fun hideKeyboard() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager
         imm?.hideSoftInputFromWindow(searchBar.windowToken, 0)

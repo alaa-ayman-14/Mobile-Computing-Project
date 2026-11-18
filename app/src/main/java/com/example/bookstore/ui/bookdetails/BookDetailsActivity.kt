@@ -24,6 +24,12 @@ class BookDetailsActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_book_details)
 
+        // Bind the back arrow to close the activity
+        val btnBack = findViewById<ImageView>(R.id.btnBack)
+        btnBack.setOnClickListener {
+            finish()
+        }
+
         val bookId = intent.getLongExtra("bookId", -1L)
 
         if (bookId == -1L) {
