@@ -19,30 +19,48 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <ImageView
-            android:id="@+id/ivListingBookImage"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardListingImage"
             android:layout_width="88dp"
             android:layout_height="118dp"
-            android:background="@color/background"
-            android:contentDescription="@string/book_image"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_book_placeholder"
+            app:cardBackgroundColor="@color/background"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeWidth="0dp">
 
-        <TextView
-            android:id="@+id/tvListingStatusBadge"
+            <ImageView
+                android:id="@+id/ivListingBookImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/book_image"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_book_placeholder" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardListingStatusBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/background"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="4dp"
-            android:text="AVAILABLE"
-            android:textColor="@color/primary_dark"
-            android:textSize="11sp"
-            android:textStyle="bold"
+            app:cardBackgroundColor="@color/background"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:strokeWidth="0dp">
+
+            <TextView
+                android:id="@+id/tvListingStatusBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:text="AVAILABLE"
+                android:textColor="@color/primary_dark"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
             android:id="@+id/tvListingBookTitle"
@@ -55,9 +73,9 @@
             android:textColor="@color/text_primary"
             android:textSize="17sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/tvListingStatusBadge"
-            app:layout_constraintStart_toEndOf="@id/ivListingBookImage"
-            app:layout_constraintTop_toTopOf="@id/ivListingBookImage"
+            app:layout_constraintEnd_toStartOf="@id/cardListingStatusBadge"
+            app:layout_constraintStart_toEndOf="@id/cardListingImage"
+            app:layout_constraintTop_toTopOf="@id/cardListingImage"
             tools:text="Clean Architecture" />
 
         <TextView
@@ -71,7 +89,7 @@
             android:textColor="@color/text_secondary"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivListingBookImage"
+            app:layout_constraintStart_toEndOf="@id/cardListingImage"
             app:layout_constraintTop_toBottomOf="@id/tvListingBookTitle"
             tools:text="by Robert C. Martin" />
 
@@ -86,7 +104,7 @@
             android:textColor="@color/text_secondary"
             android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivListingBookImage"
+            app:layout_constraintStart_toEndOf="@id/cardListingImage"
             app:layout_constraintTop_toBottomOf="@id/tvListingBookAuthor"
             tools:text="Computer Science • Like New" />
 
@@ -101,7 +119,7 @@
             android:textColor="@color/text_secondary"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivListingBookImage"
+            app:layout_constraintStart_toEndOf="@id/cardListingImage"
             app:layout_constraintTop_toBottomOf="@id/tvListingMeta"
             tools:text="A Craftsman's Guide to Software Structure and Design." />
 
@@ -115,7 +133,7 @@
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/ivListingBookImage"
+            app:layout_constraintStart_toEndOf="@id/cardListingImage"
             app:layout_constraintTop_toBottomOf="@id/tvListingDescription"
             tools:text="450.00 EGP" />
 
@@ -124,7 +142,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
-            app:constraint_referenced_ids="ivListingBookImage,tvListingBookPrice" />
+            app:constraint_referenced_ids="cardListingImage,tvListingBookPrice" />
 
         <View
             android:id="@+id/dividerActions"
@@ -161,12 +179,13 @@
                 android:textSize="12sp"
                 app:cornerRadius="10dp"
                 app:strokeColor="@color/border" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnToggleSold"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_weight="1"
                 android:layout_marginHorizontal="8dp"
+                android:layout_weight="1"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:paddingHorizontal="8dp"
@@ -176,6 +195,7 @@
                 android:textSize="12sp"
                 app:backgroundTint="@color/primary"
                 app:cornerRadius="10dp" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnDeleteBook"
                 style="@style/Widget.Material3.Button.OutlinedButton"
@@ -194,7 +214,7 @@
                 app:iconPadding="0dp"
                 app:iconSize="20dp"
                 app:iconTint="@color/error"
-                app:strokeColor="@color/error" />
+                app:strokeColor="@color/border" />
 
         </LinearLayout>
 
